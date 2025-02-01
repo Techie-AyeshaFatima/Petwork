@@ -1,0 +1,48 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+<div class="card" style="width: 80%; margin-left: 2rem; margin-top: 10px; padding: 10px;">
+<h6>Pawsts from followed users</h6>
+{% for post in inpage %}
+    <div class="card" style="margin-left: 1rem; margin-top: 10px; padding: 10px; background-color: antiquewhite;">
+        {% if not post%}
+            <p>No posts yet.</p>
+        {% else %}
+            <a class="links" href="{% url 'profile' post.user.username%}">
+                <img style="height: 30px; border-radius: 50%;" src="https://img.icons8.com/?size=100&id=cCBSbo12R7Il&format=png&color=000000">
+                <strong>{{ post.user.username }}</strong>
+            </a>        
+            <p style="font-size: smaller;">{{ post.timestamp }}</p>
+            <h6>{{ post.content }}</h6>
+            
+            <div class="like my-3">
+                <img
+      data-id="{{post.id}}"
+      id="post-like-{{post.id}}"
+        class="liked"
+        {% if not request.user in post.like.all %}
+        data-is_liked="no"
+        src="https://img.icons8.com/carbon-copy/100/000000/like--v2.png"
+{%else%}
+data-is_liked="yes"
+        src="https://img.icons8.com/?size=100&id=123964&format=png&color=000000"
+        {%endif%}
+      />
+                
+                <span id="post-count-{{post.id}}">{{post.like.count}}</span>
+            </div>
+        {% endif %}
+    </div>
+{% endfor %}
+<nav aria-label="Page navigation example" style="margin-top: 15px;">
+    <ul class="pagination">
+        {% if inpage.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ inpage.previous_page_number}}">Previous</a></li>
+        {% endif %}
+        {% if inpage.has_next %}
+            <li class="page-item" style="margin-left: 3px;"><a class="page-link" href="?page={{ inpage.next_page_number}}">Next</a></li>
+        {% endif %}
+    </ul>
+</nav>
+</div>
+{% endblock %}

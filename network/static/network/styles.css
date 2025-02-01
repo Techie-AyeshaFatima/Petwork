@@ -1,0 +1,26 @@
+.liked {
+    width: 20px;
+    cursor: pointer;
+  }
+
+.edit {
+  cursor: pointer;
+}
+
+.links:link, .links:visited, .links:active{
+  color: #1f1f1f;
+  text-decoration: none;
+}
+.links:hover{
+  color: #424242;
+  text-decoration: none;
+}
+
+body{
+  background-image: url(pet1.jpg);
+  
+}
+
+p{
+  font-size: smaller;
+}

@@ -1,0 +1,70 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+{% if user.is_authenticated %}
+<div class="card" style="width: 80%; margin-left: 2rem;margin-top: 10px; padding: 10px;">
+    <form action="{% url 'newpost' %}" method="post">
+        {% csrf_token %}
+        <div class="form-floating">
+            <label for="floatingTextarea"><h6>New Pawst</h6></label>
+            <textarea class="form-control" name="content" placeholder="Write a pawst" id="floatingTextarea"></textarea>
+            <input class="btn btn-dark" type="submit" value="Pawst" style="margin-top: 10px;"><br>
+        </div>
+    </form>
+</div>
+{% endif %}
+<br>
+<div class="card" style="width: 80%; margin-left: 2rem; padding: 10px;">
+<h6>All pawsts</h6>
+{% for post in inpage %}
+    <div class="card" style="margin-left: 1rem; margin-right: 1rem; margin-top: 10px; padding: 10px; background-color: antiquewhite;">
+        {% if not post%}
+            <p>No pawsts yet.</p>
+        {% else %}
+            <a class="links" href="{% url 'profile' post.user.username%}">
+                <img style="height: 30px; border-radius: 50%;" src="https://img.icons8.com/?size=100&id=cCBSbo12R7Il&format=png&color=000000">
+                <strong>{{ post.user.username }}</strong>
+            </a>
+            <p style="font-size: smaller;">{{ post.timestamp }}</p>
+            <h6 id="post-content-{{post.id}}">{{ post.content }}</h6>
+            {% if request.user == post.user%}
+            <textarea data-id="{{post.id}}" id="post-edit-{{post.id}}" style="display:none;" class="form-control textarea" row="3">{{post.content}}</textarea>
+            {%endif%}
+
+            <div class="like my-3">
+                <img
+      data-id="{{post.id}}"
+      id="post-like-{{post.id}}"
+        class="liked"
+        {% if not request.user in post.like.all %}
+        data-is_liked="no"
+        src="https://img.icons8.com/carbon-copy/100/000000/like--v2.png"
+{%else%}
+data-is_liked="yes"
+        src="https://img.icons8.com/?size=100&id=123964&format=png&color=000000"
+        {%endif%}
+      />
+
+          
+                <span id="post-count-{{post.id}}">{{post.like.count}}</span>
+            </div>
+
+            
+            {% if request.user == post.user%}
+            <button class="text-primary edit" data-id="{{post.id}}" id="edit-btn-{{post.id}}" style="width: fit-content;">Edit</button>
+            {%endif%}
+        {% endif %}
+    </div>
+{% endfor %}
+<nav aria-label="Page navigation example" style="margin-top: 15px;">
+    <ul class="pagination">
+        {% if inpage.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ inpage.previous_page_number}}">Previous</a></li>
+        {% endif %}
+        {% if inpage.has_next %}
+            <li class="page-item" style="margin-left: 3px;"><a class="page-link" href="?page={{ inpage.next_page_number}}">Next</a></li>
+        {% endif %}
+    </ul>
+</nav>
+</div>
+{% endblock %}
